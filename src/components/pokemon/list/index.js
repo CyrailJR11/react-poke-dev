@@ -101,7 +101,7 @@ function PokemonList(props) {
 
     return (
         <div>
-            {pokemons === [] ?
+            {pokemons.length === 0 ?
                 <div>Loading pokemons</div>
                 :
                 <div>
