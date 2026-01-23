@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Nav from "../../utils/nav";
 import SearchFilter from "../../utils/searchFilter";
-import { isFavourite } from "../../../utils/favourites";
-import FavouriteToggler from "../../utils/favouriteToggler";
 import PropTypes from "prop-types";
 
 const Wrapper = styled.div`
@@ -71,20 +69,7 @@ const ItemName = styled.div`
     color: slategrey;
 `;
 
-const Logo = styled.img`
-    width: 80%;
-    max-width: 700px;
-    display:block;
-    margin:auto;
-`;
-
-const ItemImage = styled.img`
-    display: block;
-    margin: auto;
-`;
-
-function ItemList(props) {
-    const { favs } = props;
+function ItemList() {
     const [items, setItems] = useState([]);
     const [filter, setFilter] = useState("");
     const navigate = useNavigate("");

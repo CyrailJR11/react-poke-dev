@@ -5,6 +5,7 @@ import styled from "styled-components";
 import PokemonList from "./components/pokemon/list";
 import PokemonDetail from "./components/pokemon/detail";
 import ItemList from "./components/items/list";
+import ItemDetail from "./components/items/detail";
 
 const AppWrapper = styled.div`
     padding-top: 30px;
@@ -20,7 +21,7 @@ function App() {
                 <Route index path="favourites" element={<PokemonList favs={true}/>} />
                 <Route index path="items" element={<ItemList />} />
                 <Route path="/pokemon/:name" element={<PokemonDetail />} />
-                <Route path="/item/:name" element={() => {}} />
+                <Route path="/item/:name" element={<ItemDetail />} />
                 <Route path="*" element={<Navigate to="pokemon" />} />
             </Routes>
         </AppWrapper>
