@@ -7,3 +7,13 @@ export const getPokemon = (name = '') => {
     return fetch('https://pokeapi.co/api/v2/pokemon/' + name)
         .then(response => response.json());
 };
+
+export const getItems = (limit = 20, offset = 0) => {
+    return fetch('https://pokeapi.co/api/v2/item?limit=' + limit + '&offset=' + offset)
+        .then(response => response.json());
+};
+
+export const getItem = (name = '') => {
+    return fetch('https://pokeapi.co/api/v2/item/' + name)
+        .then(response => response.json());
+};

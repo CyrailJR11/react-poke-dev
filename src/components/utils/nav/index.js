@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import master from "../../../assets/masterball.png"
 import pokeball from "../../../assets/pokeball.png"
+import rareCandy from "../../../assets/rare-candy.png"
 
 const Wrapper = styled.div`
     display: flex;
@@ -86,6 +87,15 @@ function Nav() {
                     onClick={() => navigate("/favourites")}
                 >
                     Favourites
+                </PageLink>
+
+                <BallIcon src={rareCandy} onClick={() => navigate("/items")}/>
+                <PageLink
+                    src={master} 
+                    active={location.pathname === "/items"}
+                    onClick={() => navigate("/items")}
+                >
+                    Items
                 </PageLink>
             </Wrapper>
         </div>
