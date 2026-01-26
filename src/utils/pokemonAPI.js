@@ -8,8 +8,8 @@ export const getPokemon = (name = '') => {
         .then(response => response.json());
 };
 
-export const getItems = (limit = 20, offset = 0) => {
-    return fetch('https://pokeapi.co/api/v2/item?limit=' + limit + '&offset=' + offset)
+export const getItems = (limit = 120, offset = 0) => {
+    return fetch('https://pokeapi.co/api/v2/item/?offset=' + offset + '&limit=' + limit)
         .then(response => response.json());
 };
 

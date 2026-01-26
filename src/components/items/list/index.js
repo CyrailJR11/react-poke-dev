@@ -75,7 +75,7 @@ function ItemList() {
     const navigate = useNavigate("");
 
     async function getData() {
-        let data = await getItems(10);
+        let data = await getItems(100, 0);
         setItems(data.results);
     }
 
