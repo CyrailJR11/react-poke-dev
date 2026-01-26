@@ -49,14 +49,9 @@ function ItemDetail() {
         }
     }, []);
 
-    const getAttributes = () => {
-        let attributes_arr = [];
-        attributes_arr.push(item.attributes.name);
-
-        return attributes_arr.join(', ');
-    }
-
     const img_url = item ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/" + item.name + ".png" : "";
+
+    const shortEffect = item ?.effect_entries ?.find(e => e.language.name === "en") ?.short_effect ?? "No description available";
 
     return (
         <div>
@@ -72,7 +67,8 @@ function ItemDetail() {
 
                         <ItemStat><strong>ID: </strong>{item.id}</ItemStat>
                         <ItemStat><strong>Cost: </strong>{item.cost}</ItemStat>
-                        <ItemStat><strong>Categoria: </strong>{item.category.name}</ItemStat>
+                        <ItemStat><strong>Category: </strong>{item.category.name}</ItemStat>
+                        <ItemStat><strong>Effect: </strong>{shortEffect}</ItemStat>
                     </ItemCard>
                 </div>
             }
