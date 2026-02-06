@@ -151,7 +151,7 @@ function PokemonList(props) {
                                 return (
                                     <PokemonCard key={poke.name} onClick={() => navigate(link_path)}>
                                         {!favs &&
-                                            <FavouriteToggler pokemon={poke.name} />
+                                            <FavouriteToggler element={poke.name} />
                                         }
                                         <img
                                             align="center"

@@ -17,7 +17,7 @@ const Toggler = styled.img`
 `;
 
 function FavouriteToggler(props) {
-    const name = props.pokemon;
+    const name = props.element;
     const [icon, setIcon] = useState("");
 
     useEffect(() => {
@@ -44,7 +44,7 @@ function FavouriteToggler(props) {
 }
 
 FavouriteToggler.propTypes = {
-    pokemon: PropTypes.string,
+    element: PropTypes.string,
 };
 
 export default FavouriteToggler;
