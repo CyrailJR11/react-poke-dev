@@ -19,6 +19,7 @@ function App() {
             <Routes>
                 <Route index path="pokemon" element={<PokemonList favs={false}/>} />
                 <Route index path="favourites" element={<PokemonList favs={true}/>} />
+                <Route index path="berry" />
                 <Route index path="items" element={<ItemList />} />
                 <Route path="/pokemon/:name" element={<PokemonDetail />} />
                 <Route path="/item/:name" element={<ItemDetail />} />
