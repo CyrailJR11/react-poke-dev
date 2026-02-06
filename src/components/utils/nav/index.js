@@ -97,6 +97,7 @@ function Nav() {
                     onClick={() => navigate("/berries")}
                 >
                     Berries
+                </PageLink>
                 <BallIcon src={rareCandy} onClick={() => navigate("/items")}/>
                 <PageLink
                     src={master} 
