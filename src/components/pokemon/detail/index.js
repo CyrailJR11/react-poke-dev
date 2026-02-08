@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
-
+import { Loader } from '../../loader'
 import { FavouriteToggler } from '../../utils/favouriteToggler'
 
 import { getPokemon } from '../../../utils/pokemonAPI'
@@ -78,7 +78,7 @@ function PokemonDetail() {
   return (
     <div>
       {!pokemon ? (
-        <div>Loading pokemons</div>
+        <Loader />
       ) : (
         <div>
           <PokemonCard>

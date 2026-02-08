@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { SearchFilter } from '../../utils/searchFilter'
 import { Nav } from '../../utils/nav'
 import { FavouriteToggler } from '../../utils/favouriteToggler'
+import { Loader } from '../../loader'
 
 import { getPokemons } from '../../../utils/pokemonAPI'
 import { isFavourite } from '../../../utils/favourites'
@@ -44,7 +45,7 @@ export const PokemonList = ({ favs }) => {
   return (
     <div>
       {pokemons.length === 0 ? (
-        <div>Loading pokemons</div>
+        <Loader />
       ) : (
         <div>
           <img
