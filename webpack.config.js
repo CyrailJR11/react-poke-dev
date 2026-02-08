@@ -1,8 +1,10 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  mode: "production", // IMPORTANT for Vercel
+  mode: "production",
+
   module: {
     rules: [
       {
@@ -10,31 +12,37 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: { presets: ["@babel/preset-react"] }
-        }
+          options: { presets: ["@babel/preset-react"] },
+        },
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader: "file-loader",
-        options: {
-          name: "assets/[name].[ext]"
-        }
-      }
-    ]
+        type: "asset/resource",
+        generator: {
+          filename: "assets/[name][hash][ext]",
+        },
+      },
+    ],
   },
+
   plugins: [
     new HtmlWebPackPlugin({
       template: "./src/index.html",
-      filename: "index.html"
-    })
+      filename: "index.html",
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "public", to: "" }],
+    }),
   ],
+
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
-    publicPath: "/"
-  }
+    filename: "[name].[contenthash].js",
+    publicPath: "auto",
+    clean: true,
+  },
 };
