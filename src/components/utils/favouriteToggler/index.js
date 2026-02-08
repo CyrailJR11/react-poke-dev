@@ -1,50 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import styled from "styled-components";
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react'
+import './styles.scss'
 
-import { isFavourite, addFavourite, removeFavourite } from "../../../utils/favourites";
+import {
+  isFavourite,
+  addFavourite,
+  removeFavourite
+} from '../../../utils/favourites'
 
-import fullHeart from "../../../assets/heart-full.png"
-import emptyHeart from "../../../assets/heart-empty.png"
+import fullHeart from '../../../assets/heart-full.png'
+import emptyHeart from '../../../assets/heart-empty.png'
 
-const Toggler = styled.img`
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 10px;
-    width: 30px;
-    height: 30px;
-`;
+export const FavouriteToggler = ({ element }) => {
+  const [icon, setIcon] = useState('')
 
-function FavouriteToggler(props) {
-    const name = props.element;
-    const [icon, setIcon] = useState("");
+  const favIcon = () => (isFavourite(element) ? fullHeart : emptyHeart)
 
-    useEffect(() => {
-        setIcon(favIcon(name));
-    }, []);
+  useEffect(() => {
+    setIcon(favIcon())
+  }, [])
 
-    const favIcon = () => {
-        let is = isFavourite(name);
-        return is ? fullHeart : emptyHeart;
-    }
+  const toggleFav = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
 
-    const toggleFav = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
+    isFavourite(element) ? removeFavourite(element) : addFavourite(element)
+    setIcon(favIcon())
+  }
 
-        let is = isFavourite(name);
-        is ? removeFavourite(name) : addFavourite(name);
-        setIcon(favIcon(name));
-    }
-
-    return (
-        <Toggler src={icon} onClick={(e) => toggleFav(e)}/>
-    );
+  return (
+    <img src={icon} className="favourite-toggler" onClick={toggleFav} alt="" />
+  )
 }
-
-FavouriteToggler.propTypes = {
-    element: PropTypes.string,
-};
-
-export default FavouriteToggler;

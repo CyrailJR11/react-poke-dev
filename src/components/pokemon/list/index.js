@@ -1,176 +1,100 @@
-import React, { useState, useEffect } from 'react';
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import SearchFilter from "../../utils/searchFilter";
-import Nav from "../../utils/nav";
-import FavouriteToggler from "../../utils/favouriteToggler";
+import { SearchFilter } from '../../utils/searchFilter'
+import { Nav } from '../../utils/nav'
+import { FavouriteToggler } from '../../utils/favouriteToggler'
 
-import { getPokemons } from "../../../utils/pokemonAPI";
+import { getPokemons } from '../../../utils/pokemonAPI'
+import { isFavourite } from '../../../utils/favourites'
 
-import logo from "../../../assets/pokemon-logo.png"
+import logo from '../../../assets/pokemon-logo.png'
 
-import { isFavourite } from "../../../utils/favourites";
+import './styles.scss'
 
-const Wrapper = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px 2vw;
-    margin-left: 40px;
-    margin-right: 40px;
-    width: calc(100% - 80px);
-    max-width: 900px;
+export const PokemonList = ({ favs }) => {
+  const [pokemons, setPokemons] = useState([])
+  const [filter, setFilter] = useState('')
+  const [selectedTypes, setSelectedTypes] = useState([])
 
-    @media screen and (min-width: 420px) {
-        margin-left: 75px;
-        margin-right: 75px;
-        width: calc(100% - 150px);
-    }
-    @media screen and (min-width: 900px) {
-        margin-left: 120px;
-        margin-right: 120px;
-        width: calc(100% - 240px);
-    }
-    @media screen and (min-width: 1200px) {
-        margin-left: auto;
-        margin-right: auto;
-        width: 100%;
-    }
-`;
+  const navigate = useNavigate()
 
-const PokemonCard = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
+  async function getData() {
+    const data = await getPokemons(151)
 
-    background: #FFF;
-    border: 1px solid grey;
-    border-radius: 5px;
-    padding: 30px 0px;
+    const detailedPokemons = await Promise.all(
+      data.results.map(async (poke) => {
+        const res = await fetch(poke.url)
+        const details = await res.json()
 
-    width: 100%;
-    height: 120px;
+        return {
+          name: poke.name,
+          types: details.types.map((t) => t.type.name)
+        }
+      })
+    )
 
-    @media screen and (min-width: 420px) {
-        width: calc(50% - 2vw);
-    }
-    @media screen and (min-width: 900px) {
-        width: calc(33.333% - 2vw);
-    }
+    setPokemons(detailedPokemons)
+  }
 
-    font-family: Arial;
-    font-weight: 600;
-    text-transform: capitalize;
-`;
+  useEffect(() => {
+    getData()
+  }, [])
 
-const PokeName = styled.div`
-    margin-top: 25px;
-    color: slategrey;
-`;
-
-const Logo = styled.img`
-    width: 80%;
-    max-width: 700px;
-    display: block;
-    margin: auto;
-`;
-
-
-function PokemonList(props) {
-    const { favs } = props;
-
-    const [pokemons, setPokemons] = useState([]);
-    const [filter, setFilter] = useState("");
-    const [selectedTypes, setSelectedTypes] = useState([]);
-
-    const navigate = useNavigate();
-
-
-
-    async function getData() {
-        let data = await getPokemons(151);
-
-        const detailedPokemons = await Promise.all(
-            data.results.map(async (poke) => {
-                const res = await fetch(poke.url);
-                const details = await res.json();
-
-                return {
-                    name: poke.name,
-                    types: details.types.map(t => t.type.name)
-                };
-            })
-        );
-        setPokemons(detailedPokemons);
-    }
-
-    useEffect(() => {
-        getData();
-    }, []);
-
-    return (
+  return (
+    <div>
+      {pokemons.length === 0 ? (
+        <div>Loading pokemons</div>
+      ) : (
         <div>
-            {pokemons.length === 0 ?
-                <div>Loading pokemons</div>
-                :
-                <div>
-                    <Logo src={logo} onClick={() => navigate("/pokemon")} />
-                    <Nav />
-                    <SearchFilter
-                        onNameChange={(value) => setFilter(value)}
-                        onTypesChange={(types) => setSelectedTypes(types)}
-                        types={[...new Set(pokemons.flatMap(element => element.types))]}
-                    />
+          <img
+            src={logo}
+            className="pokemon-logo"
+            onClick={() => navigate('/pokemon')}
+            alt="Pokemon Logo"
+          />
+          <Nav />
+          <SearchFilter
+            onNameChange={(value) => setFilter(value)}
+            onTypesChange={(types) => setSelectedTypes(types)}
+            types={[...new Set(pokemons.flatMap((element) => element.types))]}
+          />
 
-                    <Wrapper>
-                        {pokemons
-                            .filter(poke => {
-                                const matchesName =
-                                    filter === "" || poke.name.includes(filter);
+          <div className="pokemon-wrapper">
+            {pokemons
+              .filter((poke) => {
+                const matchesName = filter === '' || poke.name.includes(filter)
+                const matchesFavs = isFavourite(poke.name) || !favs
+                const matchesTypes =
+                  selectedTypes.length === 0 ||
+                  selectedTypes.some((t) => poke.types.includes(t))
+                return matchesName && matchesFavs && matchesTypes
+              })
+              .map((poke) => {
+                const img_url =
+                  'https://img.pokemondb.net/sprites/black-white/anim/' +
+                  (favs ? 'shiny' : 'normal') +
+                  '/' +
+                  poke.name +
+                  '.gif'
 
-                                const matchesFavs =
-                                    isFavourite(poke.name) || !favs;
+                const link_path = '/pokemon/' + poke.name
 
-                                const matchesTypes =
-                                    selectedTypes.length === 0 ||
-                                    selectedTypes.some(t => poke.types.includes(t));
-
-                                return matchesName && matchesFavs && matchesTypes;
-                            })
-                            .map(poke => {
-                                const img_url =
-                                    "https://img.pokemondb.net/sprites/black-white/anim/" +
-                                    (favs ? "shiny" : "normal") +
-                                    "/" + poke.name + ".gif";
-
-                                const link_path = "/pokemon/" + poke.name;
-
-                                return (
-                                    <PokemonCard key={poke.name} onClick={() => navigate(link_path)}>
-                                        {!favs &&
-                                            <FavouriteToggler element={poke.name} />
-                                        }
-                                        <img
-                                            align="center"
-                                            style={{ display: 'block', margin: 'auto' }}
-                                            src={img_url}
-                                        />
-                                        <PokeName>{poke.name}</PokeName>
-                                    </PokemonCard>
-                                );
-                            })}
-                    </Wrapper>
-                </div>
-            }
+                return (
+                  <div
+                    key={poke.name}
+                    className="pokemon-card"
+                    onClick={() => navigate(link_path)}
+                  >
+                    {!favs && <FavouriteToggler element={poke.name} />}
+                    <img src={img_url} alt={poke.name} />
+                    <div className="poke-name">{poke.name}</div>
+                  </div>
+                )
+              })}
+          </div>
         </div>
-    );
+      )}
+    </div>
+  )
 }
-
-PokemonList.propTypes = {
-    favs: PropTypes.bool,
-};
-
-export default PokemonList;

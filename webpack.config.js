@@ -1,9 +1,14 @@
-const path = require("path");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
+const path = require('path')
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  mode: "production",
+  devServer: {
+    port: 8080,
+    historyApiFallback: true,
+    hot: true,
+    open: true
+  },
 
   module: {
     rules: [
@@ -11,38 +16,47 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
-          options: { presets: ["@babel/preset-react"] },
-        },
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-react', { runtime: 'automatic' }],
+              ['@babel/preset-env', { targets: 'defaults' }]
+            ]
+          }
+        }
       },
       {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        type: "asset/resource",
+        type: 'asset/resource',
         generator: {
-          filename: "assets/[name][hash][ext]",
-        },
-      },
-    ],
+          filename: 'assets/[name][hash][ext]'
+        }
+      }
+    ]
   },
 
   plugins: [
     new HtmlWebPackPlugin({
-      template: "./src/index.html",
-      filename: "index.html",
+      template: './src/index.html',
+      filename: 'index.html'
     }),
     new CopyPlugin({
-      patterns: [{ from: "public", to: "" }],
-    }),
+      patterns: [{ from: 'public', to: '' }]
+    })
   ],
 
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "[name].[contenthash].js",
-    publicPath: "auto",
-    clean: true,
-  },
-};
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    publicPath: 'auto',
+    clean: true
+  }
+}
